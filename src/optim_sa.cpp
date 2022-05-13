@@ -11,7 +11,7 @@ NumericVector func (NumericVector para, Function fun) {
   return loss_i_temp;
 }
 
-NumericVector var_funcc (NumericVector para_0, int fun_length, NumericVector rf) {
+NumericVector var_funcc (NumericVector para_0, int fun_length, NumericVector rf, int n_inner) {
   NumericVector ret_var_func(fun_length);
   for(int k = 0; k < (fun_length); k++) {
     ret_var_func[k] = para_0[k] + (round(R::runif(0, rf[k]) * 100) / 100) * ((R::rbinom(1, 0.5) * -2) + 1);
@@ -47,6 +47,7 @@ List main_loop (double temp, double t_min, double r, int fun_length, int nlimit,
     // Initializing and resetting variables inside the while loop
     int goodcounter = 0;
     int n_inner = 0;
+    printf("%d" n_inner);
     n_outer++;
     std::fill(n_oob.begin(), n_oob.end(), 0);
 
@@ -85,7 +86,7 @@ List main_loop (double temp, double t_min, double r, int fun_length, int nlimit,
               temp_para_i = var_funcc(para_0_j, 1, rf_j); // By the default function
               //temp_para_i = var_func(para_0[j], 1, rf[j]);
             } else {
-              temp_para_i = var_func(para_0[j], 1, rf[j], temp); // By a user declared function. This is an SEXP. The algorithm is therefore much slower with it.
+              temp_para_i = var_func(para_0[j], 1, rf[j], temp, n_inner); // By a user declared function. This is an SEXP. The algorithm is therefore much slower with it.
             }
             // NumericVector temp_para_i = var_func(para_0[i], 1, rf[i]); // MUST BE UPDATED: C FUN NEEDED
 
